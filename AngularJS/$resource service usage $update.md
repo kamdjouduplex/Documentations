@@ -3,9 +3,9 @@
 to use the update method of the angularjs resource service,
 
 ### 1 - we need to create the service
- here is a sample service created in angularjs
-`
- app.factory('MyService', 
+	here is a sample service created in angularjs
+
+app.factory('MyService', 
 	['$resource', 'API_URL','UserAPIParamsService', function ( $resource, API_URL, UserAPIParamsService) {
 		var user_params = UserAPIParamsService.getUserParams();
 		return $resource(
@@ -17,12 +17,11 @@ to use the update method of the angularjs resource service,
 		);
 	}]
 );
-`
 
 
 ### 2 - We need a controller where we will call the Service
 	here is a sample code too
-`
+
 app.controller('MyController', ['$scope', 'MyService', function($scope, MyService){
 	
 	$scope.update = function(){
