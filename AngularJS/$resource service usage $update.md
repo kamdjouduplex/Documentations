@@ -22,7 +22,7 @@ app.factory('MyService', ['$resource', 'API_URL','UserAPIParamsService',
 ### 2 - We need a controller where we will call the Service
 	here is a sample code too
 
-`app.controller('MyController', ['$scope', 'MyService', function($scope, MyService){
+```app.controller('MyController', ['$scope', 'MyService', function($scope, MyService){
 	$scope.update = function(){
 		//here start my resource for updating the data
 		var updatedData = $scope.formData  //all the data from the form is save here
@@ -31,4 +31,4 @@ app.factory('MyService', ['$resource', 'API_URL','UserAPIParamsService',
           var data = response; //here response if the callback after sucessfully updated
         });
 	}
-}])`
+}])```
