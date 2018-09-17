@@ -8,7 +8,7 @@ Only Home page is accessible, Laravel application on the Ubuntu server?
 -comment the line Directoryroot
 
 -add this just after that
-<Directory /var/www/html/public/>
+<Directory /var/www/html/>
   AllowOverride All
 </Directory>
 
