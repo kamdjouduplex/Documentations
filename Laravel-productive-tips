@@ -1,0 +1,47 @@
+## How to remove the "public" key on the app url
+
+Do do this we simpler follow this to steps and we are done
+
+### 1 copy the .htaccess file from the publuc/ directory to the root directory of your laravel app
+
+### 2 change it content with this code snippet
+
+`
+<IfModule mod_rewrite.c>
+    <IfModule mod_negotiation.c>
+        Options -MultiViews -Indexes
+    </IfModule>
+
+    RewriteEngine On
+
+    # Handle Authorization Header
+    RewriteCond %{HTTP:Authorization} .
+    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+    RewriteEngine On
+
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^(.*)/$ /$1 [L,R=301]
+
+    #protect theenv file agains hackers
+    RewriteRule ^.env - [F,L,NC]
+    #RewriteRule ^\.env$ - [R=404,L,NC] 
+
+    #add any file format you need your application to suport
+    RewriteCond %{REQUEST_URI} !(\.css|\.js|\.png|\.jpg|\.gif|robots\.txt)$ [NC]
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^ index.php [L]
+
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_URI} !^/public/
+    #update this folders according to your need e.g css|js|images|fonts|...
+    RewriteRule ^(app|css|generate|img|js|pages|posts|uploads|users|vendor)/(.*)$ public/$1/$2 [L,NC]
+
+</IfModule>
+`
+
+### 3 renane you server.php file index.php and that is all
+
+**enjoy!
