@@ -1,0 +1,16 @@
+# How to fix this error
+Only Home page is accessible, Laravel application on the Ubuntu server?
+
+-left the .htaccess in it original state
+-go into /etc/apache2/sites_available/00-default.cong
+-edit it as follow:
+
+-comment the line Directoryroot
+
+-add this just after that
+<Directory /var/www/html/public/>
+  AllowOverride All
+</Directory>
+
+-restart your server
+systemctl restart apache2.service
