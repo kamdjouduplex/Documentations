@@ -1,0 +1,77 @@
+# Sent Happy Birthday Email in a Queue With Scheduling Jobs in Laravel 5.6
+
+### 1- create your view file in resources/views/emails/birthday.blade.php
+
+`<html>
+<head>
+  <title>Happy Birthday</title>
+</head>
+<body>
+  <h2>Happy Birthday to you</h2>
+  <h1>{{$user['name']}}</h1>
+  <h3>Enjoy your day!</h3>
+</body>
+</html>`
+
+### 2- Create your command
+
+`php artisan make:command SentBirthdayEmail --command=email:birthday`
+
+then edit the *description* to this: `protected $description = 'Email users a birthday message on thier birthday';`
+
+### 3- Create a Mailable Class with this: `php artisan make:mail SendBirthdayMailable`
+then edit it build method like this:
+` return $this->view('emails.birthday')
+              ->from('info@mail.com', \Config::get('app.name'))
+              ->subject('Happy Birthday!');`
+              
+also add a public propery of the user variable like this:
+  `public $user; 
+    /**
+     * Create a new message instance.
+     *
+     * @return void
+     */
+    public function __construct($user)
+    {
+        $this->user = $user;
+    }`
+    
+### 4- Create a queue where all the email will be queue and sent progressivelly
+first run these two command
+`php artisan queue:table`
+`php artisan migrate`
+also set the queue driver to database `QUEUE_DRIVER=database`
+then you create the queue like this:
+
+`php artisan make:job SendHappyBirthdayEmail --queued`
+after that we edit it handler method as follow:
+
+  `$users = User::whereMonth('birthdate', '=', date('m'))->whereDay('birthdate', '=', date('d'))->get();
+  foreach($users as $user) {
+    // Send the email to user
+    Mail::to($user['email'])->send(new SendBirthdayMailable($user));
+  }`
+  
+  ### 5- Last Thing Update the handler method of the Command Class as follow:
+  
+  `dispatch((new SendHappyBirthdayEmail())->delay(60 * 2));
+   $this->info('Birthday messages sent successfully!');`
+   
+   ### 6- Register the commande and Test
+   
+   update the app/Console/Kernel.php to register the commande as follow:
+   `$commands = [Commands\SendBirthdayEmail::class]` 
+   then add the command to the schedule too like this:
+   `protected function schedule(Schedule $schedule)
+    {
+        $schedule->command('email:birthday')->everyMinute();
+    }`
+    
+    Now, to test your application you jsut have to run this two commands
+    
+    `php artisan queue:listen database`
+    `php artisan schedule:run`
+    
+    if everything go on smoothly you will see your email sent after 2 minuttes.
+    
