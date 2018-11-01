@@ -2,15 +2,27 @@
 Only Home page is accessible, Laravel application on the Ubuntu server?
 
 -left the .htaccess in it original state
--go into /etc/apache2/sites_available/00-default.cong
+-go into /etc/apache2/sites_available/00-default.conf
 -edit it as follow:
 
 -comment the line Directoryroot
 
--add this just after that
+-add this just after that (make sure you type this manually)
 <Directory /var/www/html/>
   AllowOverride All
 </Directory>
 
 -restart your server
 systemctl restart apache2.service
+
+
+# et pour le cas du ssl il faut modifier plusto le fichier
+-go into /etc/apache2/sites_available/default-ssl.conf
+-edit it as follow:
+
+-comment the line Directoryroot
+
+-add this just after that(make sure you type this manually)
+<Directory /var/www/html/>
+  AllowOverride All
+</Directory>
